@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { GraduationCap, Store, Landmark, LogIn, UserPlus, Menu, LogOut } from "lucide-react"
@@ -22,12 +23,17 @@ export function SiteHeader() {
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 group" aria-label="Sakhi Seva Home">
-          <span
-            aria-hidden
-            className="inline-block h-8 w-8 rounded-lg bg-primary shadow-sm"
-            title="Sakhi Seva logo block"
-          />
+        <Link href="/" className="flex items-center gap-3 group" aria-label="Sakhi Seva Home">
+          <div className="relative h-10 w-auto">
+            <Image
+              src="/logo_ss.jpg"
+              alt="Sakhi Seva Logo"
+              width={120}
+              height={40}
+              className="h-full w-auto object-contain group-hover:opacity-90 transition-opacity"
+              priority
+            />
+          </div>
           <span className="text-lg font-semibold tracking-tight text-foreground group-hover:opacity-90 transition-opacity">
             Sakhi Seva
           </span>
@@ -108,7 +114,20 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
               <SheetHeader>
-                <SheetTitle>Sakhi Seva</SheetTitle>
+                <div className="flex items-center gap-3">
+                  <div className="relative h-8 w-auto">
+                    <Image
+                      src="/logo_ss.jpg"
+                      alt="Sakhi Seva Logo"
+                      width={96}
+                      height={32}
+                      className="h-full w-auto object-contain"
+                    />
+                  </div>
+                  <span className="text-lg font-semibold tracking-tight text-foreground">
+                    Sakhi Seva
+                  </span>
+                </div>
               </SheetHeader>
               <nav aria-label="Mobile primary" className="mt-4 grid gap-1">
                 {nav.map(({ href, label, Icon }) => {

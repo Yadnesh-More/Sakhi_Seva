@@ -11,7 +11,7 @@ const trainingData = {
         {
           id: "topic-1-1",
           title: "Introduction to Smartphones",
-          videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U",
+          videoUrl: "https://www.youtube.com/embed/r22jFymPxRY",
           duration: "6:12",
           notes: "Learn the basics of using a smartphone - from turning it on to navigating the interface."
         },
