@@ -19,11 +19,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'image.thum.io',
+        hostname: '**',
       },
       {
-        protocol: 'https',
-        hostname: 'api.microlink.io',
+        protocol: 'http',
+        hostname: '**',
       },
     ],
   },

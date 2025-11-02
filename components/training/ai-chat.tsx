@@ -49,6 +49,7 @@ interface StructuredResource {
     title: string
     link: string
     summary: string
+    image?: string
 }
 
 interface StructuredData {
@@ -226,6 +227,7 @@ export default function AIChat() {
                                                                         title={resource.title}
                                                                         type={resource.type}
                                                                         summary={resource.summary}
+                                                                        image={resource.image}
                                                                     />
                                                                 ))}
                                                             </div>

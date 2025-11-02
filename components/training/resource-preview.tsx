@@ -10,9 +10,10 @@ interface ResourcePreviewProps {
   title: string
   type: 'video' | 'article' | 'blog'
   summary: string
+  image?: string
 }
 
-export function ResourcePreview({ url, title, type, summary }: ResourcePreviewProps) {
+export function ResourcePreview({ url, title, type, summary, image }: ResourcePreviewProps) {
   const [imageError, setImageError] = useState(false)
   const [imageLoading, setImageLoading] = useState(true)
 
@@ -23,12 +24,7 @@ export function ResourcePreview({ url, title, type, summary }: ResourcePreviewPr
     const videoId = extractYouTubeId(url)
     thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : ''
   } else {
-    try {
-      const encodedUrl = encodeURIComponent(url)
-      thumbnailUrl = `https://image.thum.io/get/width/800/crop/600/${url}`
-    } catch (e) {
-      thumbnailUrl = ''
-    }
+    thumbnailUrl = image || ''
   }
 
   return (
