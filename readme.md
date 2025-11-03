@@ -6,10 +6,11 @@ Platform empowering rural women entrepreneurs in Maharashtra through digital ski
 
 ### 🎓 AI Trainer
 - Powered by **Gemini 2.5 Flash**
-- Real-time web search and citations
+- Real-time web search with Google
+- Structured resource cards (videos, articles, blogs)
 - Conversation history
-- Markdown responses
-- Article and video links
+- Web citations and summaries
+- Auto-parse JSON for resource info
 - 24/7 support
 
 ### 🏪 Marketplace

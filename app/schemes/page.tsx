@@ -1,4 +1,5 @@
 import { SiteHeader } from "@/components/site-header"
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 
 type Scheme = {
   title: string
@@ -36,8 +37,9 @@ const SCHEMES: Scheme[] = [
 
 export default function SchemesPage() {
   return (
-    <main>
-      <SiteHeader />
+    <ProtectedRoute>
+      <main>
+        <SiteHeader />
       <section className="mx-auto max-w-6xl px-4 py-10">
         <header className="mb-6">
           <h1 className="text-2xl font-semibold">Government schemes</h1>
@@ -73,6 +75,7 @@ export default function SchemesPage() {
           </p>
         </div>
       </section>
-    </main>
+      </main>
+    </ProtectedRoute>
   )
 }

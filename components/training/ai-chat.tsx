@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ArrowRight, Paperclip, Loader2, ExternalLink } from "lucide-react"
+import { ArrowRight, Paperclip, Loader2, ExternalLink, PlayCircle, FileText, Newspaper } from "lucide-react"
+import { ResourcePreview } from "./resource-preview"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea"
@@ -37,10 +38,32 @@ const GEMINI_ICON = (
     </svg>
 )
 
+interface YouTubeVideo {
+    title: string
+    link: string
+    summary: string
+}
+
+interface StructuredResource {
+    type: 'article' | 'blog'
+    title: string
+    link: string
+    summary: string
+    image?: string
+}
+
+interface StructuredData {
+    header: string
+    intro: string
+    youtubeVideos?: YouTubeVideo[]
+    resources: StructuredResource[]
+}
+
 interface Message {
-  role: 'user' | 'model'
-  content: string
-  citations?: Array<{ title: string; url: string; index: number }>
+    role: 'user' | 'model'
+    content: string
+    citations?: Array<{ title: string; url: string; index: number }>
+    structuredData?: StructuredData
 }
 
 export default function AIChat() {
@@ -63,7 +86,7 @@ export default function AIChat() {
         const userMessage = input.trim()
         setInput("")
         adjustHeight(true)
-        
+
         setMessages(prev => [...prev, { role: 'user', content: userMessage }])
         setLoading(true)
 
@@ -88,7 +111,8 @@ export default function AIChat() {
                 setMessages(prev => [...prev, {
                     role: 'model',
                     content: data.message,
-                    citations: data.citations || []
+                    citations: data.citations || [],
+                    structuredData: data.structuredData
                 }])
             } else {
                 setMessages(prev => [...prev, {
@@ -115,8 +139,8 @@ export default function AIChat() {
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto py-4 flex flex-col h-[calc(100vh-200px)]">
-            <div className="bg-black/5 dark:bg-white/5 rounded-2xl p-1.5 pt-4 flex-1 flex flex-col">
+        <div className="w-full max-w-4xl mx-auto py-4 flex flex-col h-[calc(100vh-250px)]">
+            <div className="bg-black/5 dark:bg-white/5 rounded-2xl p-1.5 pt-4 flex-1 flex flex-col min-h-0">
                 <div className="flex items-center gap-2 mb-2.5 mx-2">
                     <div className="flex-1 flex items-center gap-2">
                         {GEMINI_ICON}
@@ -161,37 +185,88 @@ export default function AIChat() {
                                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                                     ) : (
                                         <div className="text-sm">
-                                            <div className="prose prose-sm dark:prose-invert max-w-none">
-                                                <ReactMarkdown
-                                                    remarkPlugins={[remarkGfm]}
-                                                    rehypePlugins={[rehypeRaw]}
-                                                    components={{
-                                                        img: ({ src, alt }) => (
-                                                            <img 
-                                                                src={src} 
-                                                                alt={alt}
-                                                                className="max-w-full h-auto rounded-lg my-2"
-                                                            />
-                                                        ),
-                                                        a: ({ href, children }) => (
-                                                            <a
-                                                                href={href}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="text-primary hover:underline flex items-center gap-1"
-                                                            >
-                                                                {children}
-                                                                <ExternalLink className="w-3 h-3 inline" />
-                                                            </a>
-                                                        ),
-                                                    }}
-                                                >
-                                                    {msg.content}
-                                                </ReactMarkdown>
-                                            </div>
+                                            {msg.structuredData ? (
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <h3 className="text-base font-semibold mb-2">{msg.structuredData.header}</h3>
+                                                        {msg.structuredData.intro && (
+                                                            <p className="text-muted-foreground mb-4">{msg.structuredData.intro}</p>
+                                                        )}
+                                                    </div>
+                                                    {msg.structuredData.youtubeVideos && msg.structuredData.youtubeVideos.length > 0 && (
+                                                        <div>
+                                                            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                <PlayCircle className="w-4 h-4" />
+                                                                YouTube Videos
+                                                            </h4>
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                {msg.structuredData.youtubeVideos.map((video, idx) => (
+                                                                    <ResourcePreview
+                                                                        key={idx}
+                                                                        url={video.link}
+                                                                        title={video.title}
+                                                                        type="video"
+                                                                        summary={video.summary}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {msg.structuredData.resources && msg.structuredData.resources.length > 0 && (
+                                                        <div>
+                                                            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                                                                <FileText className="w-4 h-4" />
+                                                                Articles & Blogs
+                                                            </h4>
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                {msg.structuredData.resources.map((resource, idx) => (
+                                                                    <ResourcePreview
+                                                                        key={idx}
+                                                                        url={resource.link}
+                                                                        title={resource.title}
+                                                                        type={resource.type}
+                                                                        summary={resource.summary}
+                                                                        image={resource.image}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="prose prose-sm dark:prose-invert max-w-none">
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkGfm]}
+                                                        rehypePlugins={[rehypeRaw]}
+                                                        components={{
+                                                            img: ({ src, alt }) => (
+                                                                <img
+                                                                    src={src}
+                                                                    alt={alt}
+                                                                    className="max-w-full h-auto rounded-lg my-2"
+                                                                />
+                                                            ),
+                                                            a: ({ href, children }) => (
+                                                                <a
+                                                                    href={href}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-primary hover:underline flex items-center gap-1"
+                                                                >
+                                                                    {children}
+                                                                    <ExternalLink className="w-3 h-3 inline" />
+                                                                </a>
+                                                            ),
+                                                        }}
+                                                    >
+                                                        {msg.content}
+                                                    </ReactMarkdown>
+                                                </div>
+                                            )}
                                             {msg.citations && msg.citations.length > 0 && (
                                                 <div className="mt-4 pt-4 border-t border-border">
-                                                    <p className="text-xs font-semibold mb-2">Sources:</p>
+                                                    <p className="text-xs font-semibold mb-2">Additional Sources:</p>
                                                     <div className="space-y-1">
                                                         {msg.citations.map((cite, i) => (
                                                             <a

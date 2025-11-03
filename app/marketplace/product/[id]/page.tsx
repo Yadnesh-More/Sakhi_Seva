@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 
 interface Product {
   _id: string
@@ -69,17 +70,19 @@ export default function ProductPage({
 
   if (loading) {
     return (
-      <main>
-        <SiteHeader />
-        <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 dark:from-black dark:to-gray-950">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading product...</p>
+      <ProtectedRoute>
+        <main>
+          <SiteHeader />
+          <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 dark:from-black dark:to-gray-950">
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading product...</p>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </ProtectedRoute>
     )
   }
 
@@ -88,8 +91,9 @@ export default function ProductPage({
   }
 
   return (
-    <main>
-      <SiteHeader />
+    <ProtectedRoute>
+      <main>
+        <SiteHeader />
       <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 dark:from-black dark:to-gray-950">
         {/* Header Section */}
         <div className="px-4 sm:px-6 lg:px-8 py-6 bg-card dark:bg-[oklch(0.205_0_0)] border-b border-border">
@@ -212,6 +216,7 @@ export default function ProductPage({
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </ProtectedRoute>
   )
 }

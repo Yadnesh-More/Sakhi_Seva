@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Loader2, RefreshCw } from "lucide-react"
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 
 type Product = {
   _id: string
@@ -165,8 +166,9 @@ export default function MarketplacePage() {
   }
 
   return (
-    <main>
-      <SiteHeader />
+    <ProtectedRoute>
+      <main>
+        <SiteHeader />
       <section className="mx-auto max-w-6xl px-4 py-10">
         <header className="mb-6">
           <div className="flex items-center justify-between">
@@ -312,6 +314,7 @@ export default function MarketplacePage() {
           </div>
         )}
       </section>
-    </main>
+      </main>
+    </ProtectedRoute>
   )
 }
